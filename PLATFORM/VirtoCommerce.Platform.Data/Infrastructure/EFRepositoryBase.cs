@@ -28,6 +28,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
         protected EFRepositoryBase()
             : base("VirtoCommerce")
         {
+            this.EnableDatabaseLog();
         }
 
         /// <summary>
@@ -42,8 +43,9 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
             _unitOfWork = unitOfWork;
             _interceptors = interceptors;
 
-			Configuration.LazyLoadingEnabled = false;
+            Configuration.LazyLoadingEnabled = false;
 
+            this.EnableDatabaseLog();
         }
 
         /// <summary>
@@ -58,7 +60,17 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
             _unitOfWork = unitOfWork;
             _interceptors = interceptors;
 
-			Configuration.LazyLoadingEnabled = false;
+            Configuration.LazyLoadingEnabled = false;
+
+            this.EnableDatabaseLog();
+        }
+
+        protected void EnableDatabaseLog()
+        {
+            this.Database.Log = new Action<string>(x =>
+            {
+                System.Diagnostics.Debug.WriteLine(x);
+            });
         }
 
         /// <summary>
@@ -89,7 +101,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
-			modelBuilder.Properties().Where(x => x.Name == "ModifiedBy" || x.Name == "CreatedBy").Configure(x => x.HasMaxLength(64));
+            modelBuilder.Properties().Where(x => x.Name == "ModifiedBy" || x.Name == "CreatedBy").Configure(x => x.HasMaxLength(64));
             base.OnModelCreating(modelBuilder);
         }
 
