@@ -12,7 +12,8 @@ namespace VirtoCommerce.Platform.Data.Infrastructure.Interceptors
 
             if (entity.IsTransient())
             {
-                entity.Id = Guid.NewGuid().ToString("N");
+                // entity.Id = Guid.NewGuid().ToString("N");
+                entity.Id = GuidCombiPrimaryKeyGeneratorInterceptor.GenerateComb().ToString("N");
             }
         }
 
